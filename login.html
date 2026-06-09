@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GLITCH — Portale Staff</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="particles-js"></div>
+
+<div class="page-wrapper">
+  <nav>
+    <a href="index.html" class="nav-logo neon-flicker">GLITCH</a>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="assistenza.html">Assistenza</a></li>
+      <li><a href="login.html">Accesso Staff</a></li>
+    </ul>
+  </nav>
+
+  <div class="header-logo-wrap">
+    <div class="header-logo">PORTALE STAFF</div>
+    <div class="hero-sub">TERMINALE AD ACCESSO LIMITATO // SOLO PERSONALE AUTORIZZATO</div>
+  </div>
+
+  <div class="section">
+    <div class="card-container">
+      <div class="card-title">&#9632; Autenticazione Richiesta</div>
+
+      <div style="text-align:center;margin-bottom:24px;">
+        <div style="display:inline-block;border:1px solid rgba(255,0,85,0.4);border-radius:3px;padding:8px 20px;
+                    font-size:0.7rem;letter-spacing:3px;color:var(--neon-red);text-shadow:0 0 6px var(--neon-red);
+                    box-shadow:0 0 12px rgba(255,0,85,0.15);">
+          &#9632; ACCESSO RISTRETTO &#9632;
+        </div>
+      </div>
+
+      <div class="alert alert-error" id="login-error"></div>
+      <div class="alert alert-success" id="login-success"></div>
+
+      <div class="form-group">
+        <label>Nome Utente Staff</label>
+        <input type="text" id="staff-username" placeholder="identificatore_staff" autocomplete="off"
+               onkeypress="if(event.key==='Enter')doStaffLogin()" />
+      </div>
+      <div class="form-group">
+        <label>Password Staff</label>
+        <input type="password" id="staff-password" placeholder="••••••••••••••"
+               onkeypress="if(event.key==='Enter')doStaffLogin()" />
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-red" onclick="doStaffLogin()" style="width:100%;">
+          &#9632; Autentica &amp; Accedi
+        </button>
+      </div>
+
+      <div style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(138,43,226,0.15);
+                  font-size:0.7rem;color:rgba(180,160,220,0.4);text-align:center;letter-spacing:2px;">
+        TUTTI I TENTATIVI DI ACCESSO SONO REGISTRATI E MONITORATI
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    GLITCH SYSTEM v1.0 // ZONA RISERVATA STAFF // &copy; 2025
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+<script src="script.js"></script>
+<script src="particles-config.js"></script>
+<script>
+  (function() {
+    if (GLITCH.isStaffLoggedIn()) {
+      window.location.href = 'dashboard.html';
+    }
+  })();
+
+  var failCount = 0;
+
+  function showError(msg) {
+    var el = document.getElementById('login-error');
+    el.textContent = msg;
+    el.classList.add('visible');
+    document.getElementById('staff-username').style.borderColor = 'var(--neon-red)';
+    document.getElementById('staff-password').style.borderColor = 'var(--neon-red)';
+    document.getElementById('staff-password').value = '';
+    setTimeout(function() {
+      el.classList.remove('visible');
+      document.getElementById('staff-username').style.borderColor = '';
+      document.getElementById('staff-password').style.borderColor = '';
+    }, 4000);
+  }
+
+  function doStaffLogin() {
+    var username = document.getElementById('staff-username').value;
+    var password = document.getElementById('staff-password').value;
+
+    if (!username || !password) {
+      showError('Tutti i campi sono obbligatori. Accesso negato.');
+      return;
+    }
+
+    var ok = GLITCH.staffLogin(username, password);
+    if (!ok) {
+      failCount++;
+      var msgs = [
+        'Credenziali non valide. Accesso negato.',
+        'Autenticazione fallita. Tentativo registrato nel sistema.',
+        'Accesso non autorizzato rilevato. Operazione bloccata.',
+        'Multipli tentativi falliti registrati. Allerta intrusione attiva.'
+      ];
+      showError(msgs[Math.min(failCount - 1, msgs.length - 1)]);
+      return;
+    }
+
+    failCount = 0;
+    GLITCH.setStaffSession();
+    var successEl = document.getElementById('login-success');
+    successEl.textContent = 'Autenticazione riuscita. Caricamento pannello di controllo...';
+    successEl.classList.add('visible');
+    setTimeout(function() { window.location.href = 'dashboard.html'; }, 900);
+  }
+</script>
+</body>
+</html>

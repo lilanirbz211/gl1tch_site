@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GLITCH — Rete Pubblica</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="particles-js"></div>
+
+<div class="page-wrapper">
+  <nav>
+    <a href="index.html" class="nav-logo neon-flicker">GLITCH</a>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="assistenza.html">Assistenza</a></li>
+      <li><a href="login.html">Accesso Staff</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <div class="header-logo-wrap glitch-anim">
+    <div class="huge-title" id="main-title" data-text="GLITCH">GLITCH</div>
+    <div class="hero-sub">TERMINALE RETE PUBBLICA // CONNESSO</div>
+  </div>
+
+  <div class="section">
+
+    <!-- NEWS MARQUEE -->
+    <div class="marquee-wrap">
+      <span class="marquee-label">&#9632; TRASMISSIONE LIVE</span>
+      <div class="marquee-track" id="marquee-track">
+        <span>Benvenuto nella Rete GLITCH</span>
+        <span style="color:var(--neon-purple);margin:0 20px;">//</span>
+        <span>Resta all'erta, operatore</span>
+        <span style="color:var(--neon-purple);margin:0 20px;">//</span>
+        <span>Sistema operativo</span>
+        <span style="color:var(--neon-purple);margin:0 20px;">//</span>
+        <span>Tutti i canali attivi</span>
+      </div>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+
+      <!-- LEADERBOARD -->
+      <div class="panel">
+        <div class="panel-title">&#9632; Classifica di Rete</div>
+        <table class="cyber-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Operatore</th>
+              <th>Punti</th>
+              <th>Stato</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-tbody">
+            <tr><td colspan="4" style="color:var(--text-dim);text-align:center;padding:20px;">Nessun operatore in classifica.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- NETWORK STATUS -->
+      <div class="panel">
+        <div class="panel-title">&#9632; Stato del Sistema</div>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(138,43,226,0.12);">
+            <span style="font-size:0.82rem;letter-spacing:2px;">SERVER PRINCIPALE</span>
+            <span class="badge badge-online">ONLINE</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(138,43,226,0.12);">
+            <span style="font-size:0.82rem;letter-spacing:2px;">CANALE ASSISTENZA</span>
+            <span class="badge badge-online">ONLINE</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(138,43,226,0.12);">
+            <span style="font-size:0.82rem;letter-spacing:2px;">RELAY DATI</span>
+            <span class="badge badge-online">ONLINE</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(138,43,226,0.12);">
+            <span style="font-size:0.82rem;letter-spacing:2px;">LIVELLO CRITTOGRAFIA</span>
+            <span class="badge badge-online">ATTIVO</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;">
+            <span style="font-size:0.82rem;letter-spacing:2px;">UTENTI REGISTRATI</span>
+            <span style="color:var(--neon-purple);font-family:Orbitron,sans-serif;font-size:0.9rem;" id="user-count">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DISCORD PANEL -->
+    <div class="panel" style="margin-top:24px;">
+      <div class="panel-title">&#9632; Entra nella Rete — Discord</div>
+      <div class="discord-panel">
+        <div class="discord-text">
+          <h3>Connettiti al Quartier Generale GLITCH</h3>
+          <p>
+            Unisciti al nostro canale Discord sicuro per connetterti con altri operatori, ricevere aggiornamenti
+            in tempo reale, partecipare agli eventi della rete e accedere ai canali esclusivi. La community ti aspetta.
+          </p>
+          <a class="btn btn-discord" href="https://discord.gg/VCruJv8Zhw" target="_blank" rel="noopener">
+            &#9632; Connetti Discord
+          </a>
+        </div>
+        <div class="discord-banner-box">
+          <img src="discord-banner.jpg" alt="Banner Server Discord"
+               onerror="this.parentNode.style.background='linear-gradient(135deg,#1a0533,#0e0e2e)';this.style.display='none';" />
+        </div>
+      </div>
+    </div>
+
+    <!-- NEWS ARCHIVE -->
+    <div class="panel">
+      <div class="panel-title">&#9632; Archivio Notizie</div>
+      <div id="news-archive">
+        <p style="color:var(--text-dim);font-size:0.8rem;">Nessuna trasmissione registrata.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    GLITCH SYSTEM v1.0 // ACCESSO NON AUTORIZZATO MONITORATO // &copy; 2025
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+<script src="script.js"></script>
+<script src="particles-config.js"></script>
+<script>
+  function renderLeaderboard() {
+    var lb = GLITCH.getLeaderboard();
+    var tbody = document.getElementById('leaderboard-tbody');
+    if (!tbody) return;
+    if (lb.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4" style="color:var(--text-dim);text-align:center;padding:20px;">Nessun operatore in classifica.</td></tr>';
+      return;
+    }
+    var rankClass = ['rank-1','rank-2','rank-3'];
+    tbody.innerHTML = lb.slice(0,10).map(function(e,i) {
+      return '<tr>' +
+        '<td class="' + (rankClass[i]||'') + '">' + (i+1) + '</td>' +
+        '<td class="' + (rankClass[i]||'') + '">' + e.username + '</td>' +
+        '<td style="color:var(--neon-green);">' + e.points.toLocaleString() + '</td>' +
+        '<td><span class="badge badge-online">Attivo</span></td>' +
+      '</tr>';
+    }).join('');
+  }
+
+  function renderNews() {
+    var news = GLITCH.getNews();
+    var archive = document.getElementById('news-archive');
+    if (!archive) return;
+    if (news.length === 0) {
+      archive.innerHTML = '<p style="color:var(--text-dim);font-size:0.8rem;">Nessuna trasmissione registrata.</p>';
+      return;
+    }
+    archive.innerHTML = news.map(function(n) {
+      return '<div style="padding:12px;border:1px solid rgba(138,43,226,0.2);border-radius:3px;background:rgba(0,0,0,0.3);margin-bottom:10px;">' +
+        '<span style="color:var(--text-dim);font-size:0.7rem;letter-spacing:2px;">' + new Date(n.publishedAt).toLocaleString('it-IT') + '</span>' +
+        '<p style="margin-top:6px;font-size:0.85rem;color:#d8c8f8;">' + n.content + '</p>' +
+      '</div>';
+    }).join('');
+  }
+
+  function renderMarquee() {
+    var news = GLITCH.getNews();
+    var track = document.getElementById('marquee-track');
+    if (!track) return;
+    if (news.length > 0) {
+      track.innerHTML = news.map(function(n) { return '<span>' + n.content + '</span>'; })
+        .join(' <span style="color:var(--neon-purple);margin:0 20px;">//</span> ');
+    }
+  }
+
+  function updateUserCount() {
+    var el = document.getElementById('user-count');
+    if (el) el.textContent = GLITCH.getUsers().length;
+  }
+
+  async function tick() {
+    await GLITCH.fetchDB();
+    renderLeaderboard();
+    renderNews();
+    renderMarquee();
+    updateUserCount();
+  }
+
+  tick();
+  setInterval(tick, 5000);
+
+  /* ── TITOLO: SCRAMBLE AL HOVER + CLICK → DISCORD ── */
+  var mainTitle = document.getElementById('main-title');
+  var ORIGINAL_TEXT = 'GLITCH';
+  var CHARS = '!<>-_\\/[]{}—=+*^?#@$%&0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  var scrambleInterval = null;
+  var isScrambling = false;
+
+  function scrambleText(el, finalText, duration) {
+    if (isScrambling) return;
+    isScrambling = true;
+    var iterations = 0;
+    var totalFrames = Math.floor(duration / 40);
+    clearInterval(scrambleInterval);
+    scrambleInterval = setInterval(function () {
+      el.textContent = finalText
+        .split('')
+        .map(function (ch, i) {
+          if (i < Math.floor((iterations / totalFrames) * finalText.length)) {
+            return ch;
+          }
+          return CHARS[Math.floor(Math.random() * CHARS.length)];
+        })
+        .join('');
+      iterations++;
+      if (iterations >= totalFrames) {
+        clearInterval(scrambleInterval);
+        el.textContent = finalText;
+        isScrambling = false;
+      }
+    }, 40);
+  }
+
+  if (mainTitle) {
+    mainTitle.addEventListener('mouseenter', function () {
+      scrambleText(mainTitle, ORIGINAL_TEXT, 700);
+    });
+    mainTitle.addEventListener('mouseleave', function () {
+      clearInterval(scrambleInterval);
+      isScrambling = false;
+      mainTitle.textContent = ORIGINAL_TEXT;
+    });
+    mainTitle.addEventListener('click', function () {
+      window.open('https://discord.gg/VCruJv8Zhw', '_blank');
+    });
+  }
+
+  /* ── EFFETTI GLITCH CASUALI (FREQUENTI) ── */
+  var glitchColors = ['#ff0055', '#00d2ff', '#8a2be2', '#39ff14', '#ffe600'];
+
+  function spawnGlitchBlock() {
+    var el = document.createElement('div');
+    el.className = 'glitch-block';
+    var w = Math.random() * 260 + 20;
+    var h = Math.random() * 14 + 2;
+    var color = glitchColors[Math.floor(Math.random() * glitchColors.length)];
+    el.style.cssText = [
+      'left:' + (Math.random() * 100) + 'vw',
+      'top:' + (Math.random() * 100) + 'vh',
+      'width:' + w + 'px',
+      'height:' + h + 'px',
+      'background:' + color,
+      'opacity:0.65'
+    ].join(';');
+    document.body.appendChild(el);
+    setTimeout(function () { el.remove(); }, 220);
+  }
+
+  function spawnScanline() {
+    var el = document.createElement('div');
+    el.className = 'glitch-scanline';
+    var color = glitchColors[Math.floor(Math.random() * glitchColors.length)];
+    el.style.cssText = [
+      'top:' + (Math.random() * 100) + 'vh',
+      'background:' + color,
+      'opacity:0.6',
+      'box-shadow:0 0 8px ' + color
+    ].join(';');
+    document.body.appendChild(el);
+    setTimeout(function () { el.remove(); }, 450);
+  }
+
+  function spawnRGBSplit() {
+    var wrap = document.querySelector('.header-logo-wrap');
+    if (!wrap) return;
+    var wrapRect = wrap.getBoundingClientRect();
+
+    var red = document.createElement('div');
+    red.className = 'glitch-rgb';
+    red.style.cssText = 'color:#ff0055;top:' + (wrapRect.top + window.scrollY) + 'px';
+    red.textContent = 'GLITCH';
+
+    var cyan = document.createElement('div');
+    cyan.className = 'glitch-rgb';
+    cyan.style.cssText = 'color:#00d2ff;top:' + (wrapRect.top + window.scrollY) + 'px;animation-delay:0.04s';
+    cyan.textContent = 'GLITCH';
+
+    document.body.appendChild(red);
+    document.body.appendChild(cyan);
+    setTimeout(function () { red.remove(); cyan.remove(); }, 300);
+  }
+
+  function triggerGlitchBurst() {
+    var count = Math.floor(Math.random() * 7) + 4;
+    for (var i = 0; i < count; i++) {
+      (function(delay) {
+        setTimeout(function() {
+          var type = Math.random();
+          if (type < 0.55) spawnGlitchBlock();
+          else spawnScanline();
+        }, delay);
+      })(i * 45);
+    }
+    if (Math.random() < 0.65) {
+      setTimeout(spawnRGBSplit, Math.random() * 60);
+    }
+    if (Math.random() < 0.35) {
+      setTimeout(triggerGlitchBurst, 180);
+    }
+  }
+
+  function scheduleNextGlitch() {
+    var delay = Math.random() * 1800 + 600;
+    setTimeout(function () {
+      triggerGlitchBurst();
+      scheduleNextGlitch();
+    }, delay);
+  }
+
+  scheduleNextGlitch();
+</script>
+</body>
+</html>

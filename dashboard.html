@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GLITCH — Pannello di Controllo Staff</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="particles-js"></div>
+
+<div class="page-wrapper">
+  <nav>
+    <a href="index.html" class="nav-logo neon-flicker">GLITCH</a>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="assistenza.html">Assistenza</a></li>
+      <li><a href="login.html">Accesso Staff</a></li>
+      <li>
+        <button class="form-link" onclick="doLogout()"
+                style="color:var(--neon-red);text-shadow:0 0 6px var(--neon-red);">
+          &#9632; Disconnetti
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="header-logo-wrap">
+    <div class="header-logo" style="color:var(--neon-red);text-shadow:0 0 6px #fff,0 0 18px var(--neon-red),0 0 40px var(--neon-red),0 0 80px rgba(255,0,85,0.5);">
+      PANNELLO CONTROLLO
+    </div>
+    <div class="hero-sub">DASHBOARD STAFF // CENTRO OPERATIVO RISERVATO</div>
+  </div>
+
+  <div class="section">
+
+    <!-- PANNELLI ADMIN -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;">
+
+      <!-- PUBBLICA NOTIZIE -->
+      <div class="panel">
+        <div class="panel-title">&#9632; Pubblica Notizie di Rete</div>
+        <div class="form-group">
+          <label>Contenuto Notizia</label>
+          <textarea id="news-content" placeholder="Inserisci trasmissione notizia..." style="min-height:80px;"></textarea>
+        </div>
+        <div class="alert alert-success" id="news-alert"></div>
+        <button class="btn btn-blue" onclick="doPublishNews()">&#9632; Trasmetti Notizia</button>
+        <div style="margin-top:16px;max-height:160px;overflow-y:auto;">
+          <div id="news-preview" style="display:flex;flex-direction:column;gap:8px;"></div>
+        </div>
+      </div>
+
+      <!-- CLASSIFICA ADMIN -->
+      <div class="panel">
+        <div class="panel-title">&#9632; Aggiorna Classifica</div>
+        <div class="admin-input-row">
+          <input type="text" id="lb-username" placeholder="Nome operatore" />
+        </div>
+        <div class="admin-input-row">
+          <input type="number" id="lb-points" placeholder="Valore punti" min="0" />
+          <button class="btn btn-green" onclick="doUpdateLB()">&#9632; Imposta</button>
+        </div>
+        <div class="alert alert-success" id="lb-alert"></div>
+        <table class="cyber-table" style="margin-top:14px;">
+          <thead>
+            <tr><th>#</th><th>Operatore</th><th>Punti</th></tr>
+          </thead>
+          <tbody id="lb-admin-tbody">
+            <tr><td colspan="3" style="color:var(--text-dim);text-align:center;padding:14px;">Nessuna voce.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TABELLA UTENTI REGISTRATI -->
+    <div class="panel">
+      <div class="panel-title">&#9632; Database Utenti Registrati</div>
+      <div style="overflow-x:auto;">
+        <table class="cyber-table">
+          <thead>
+            <tr>
+              <th>Nome Utente</th>
+              <th>Email</th>
+              <th>Password (Testo)</th>
+              <th>Registrato</th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody">
+            <tr><td colspan="4" style="color:var(--text-dim);text-align:center;padding:20px;">Nessun utente registrato.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PANNELLO TICKET LIVE -->
+    <div class="panel">
+      <div class="panel-title">&#9632; Ticket di Supporto Live</div>
+      <div id="tickets-list">
+        <p style="color:var(--text-dim);font-size:0.8rem;">Nessun ticket aperto.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    GLITCH SYSTEM v1.0 // PANNELLO CONTROLLO STAFF // RISERVATO // &copy; 2025
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+<script src="script.js"></script>
+<script src="particles-config.js"></script>
+<script>
+  (function() {
+    if (!GLITCH.isStaffLoggedIn()) {
+      window.location.href = 'login.html';
+    }
+  })();
+
+  function doLogout() {
+    GLITCH.clearStaffSession();
+    window.location.href = 'login.html';
+  }
+
+  function showAlert(id, msg) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add('visible');
+    setTimeout(function() { el.classList.remove('visible'); }, 3000);
+  }
+
+  async function doPublishNews() {
+    var content = document.getElementById('news-content').value.trim();
+    if (!content) { showAlert('news-alert', 'Inserisci prima il contenuto della notizia.'); return; }
+    await GLITCH.publishNews(content);
+    document.getElementById('news-content').value = '';
+    showAlert('news-alert', 'Trasmissione inviata con successo.');
+    renderNewsPreview();
+  }
+
+  function renderNewsPreview() {
+    var news = GLITCH.getNews();
+    var container = document.getElementById('news-preview');
+    if (!container) return;
+    container.innerHTML = news.slice(0,5).map(function(n) {
+      return '<div style="padding:8px;border:1px solid rgba(138,43,226,0.2);border-radius:3px;background:rgba(0,0,0,0.3);">' +
+        '<span style="color:var(--text-dim);font-size:0.65rem;">' + new Date(n.publishedAt).toLocaleString('it-IT') + '</span>' +
+        '<p style="font-size:0.78rem;color:#d8c8f8;margin-top:4px;">' + n.content + '</p>' +
+      '</div>';
+    }).join('');
+  }
+
+  async function doUpdateLB() {
+    var username = document.getElementById('lb-username').value.trim();
+    var points   = parseInt(document.getElementById('lb-points').value, 10);
+    if (!username || isNaN(points)) { showAlert('lb-alert', 'Inserisci nome utente e punti.'); return; }
+    await GLITCH.updateLeaderboard(username, points);
+    document.getElementById('lb-username').value = '';
+    document.getElementById('lb-points').value = '';
+    showAlert('lb-alert', 'Classifica aggiornata.');
+  }
+
+  renderNewsPreview();
+  GLITCH.startDashboardLoop();
+</script>
+</body>
+</html>
