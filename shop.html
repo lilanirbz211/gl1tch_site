@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>GLITCH — Terminale Shop</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="particles-js"></div>
+
+<div class="page-wrapper">
+  <nav>
+    <a href="index.html" class="nav-logo neon-flicker">GLITCH</a>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="assistenza.html">Assistenza</a></li>
+      <li><a href="shop.html">Shop</a></li>
+    </ul>
+  </nav>
+
+  <div class="header-logo-wrap">
+    <div class="header-logo" style="color:var(--neon-yellow);">TERMINALE SHOP</div>
+    <div class="hero-sub">ACQUISISCI RISORSE // CANALE DI SUPPORTO</div>
+  </div>
+
+  <div class="section">
+    <div class="card-container" style="display:flex; flex-wrap:wrap; justify-content:center; gap:20px;">
+      
+      <div class="card" style="width:250px; text-align:center; padding:20px; border:1px solid var(--neon-yellow);">
+        <div class="card-title" style="color:var(--neon-yellow);">VIP PACK</div>
+        <p style="font-size:0.8rem; margin:15px 0;">Accesso prioritario, tag esclusivo e kit speciale.</p>
+        <button class="btn btn-purple" onclick="orderItem('VIP PACK')">RICHIEDI</button>
+      </div>
+
+      <div class="card" style="width:250px; text-align:center; padding:20px; border:1px solid var(--neon-red);">
+        <div class="card-title" style="color:var(--neon-red);">UNBAN</div>
+        <p style="font-size:0.8rem; margin:15px 0;">Rimuovi restrizioni dal tuo account di gioco.</p>
+        <button class="btn btn-purple" onclick="orderItem('UNBAN')">RICHIEDI</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+<script src="script.js"></script>
+<script src="particles-config.js"></script>
+<script>
+  function orderItem(item) {
+    var userSession = sessionStorage.getItem('glitch_user_session');
+    if (!userSession) {
+      alert('Devi essere loggato nel terminale assistenza per ordinare.');
+      window.location.href = 'assistenza.html';
+      return;
+    }
+    // Reindirizza all'assistenza per aprire il ticket
+    sessionStorage.setItem('pending_order', item);
+    window.location.href = 'assistenza.html';
+  }
+</script>
+</body>
+</html>
